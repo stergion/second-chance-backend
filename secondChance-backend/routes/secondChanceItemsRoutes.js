@@ -27,7 +27,7 @@ router.get('/', async (req, res, next) => {
     logger.info('GET / called');
     try {
         const db = await connectToDatabase();
-        const collection = db.collection("secondChanceItems");
+        const collection = db.collection(process.env.MONGO_COLLECTION);
         const items = await collection.find({}).toArray();
         res.json(items);
     } catch (e) {
@@ -42,7 +42,7 @@ router.post('/', upload.single('file'), async (req, res, next) => {
     try {
 
         const db = await connectToDatabase();
-        const collection = db.collection("secondChanceItems");
+        const collection = db.collection(process.env.MONGO_COLLECTION);
 
         const lastItem = await collection.find({}).sort({ 'id': -1 }).limit(1).toArray();
 
@@ -63,7 +63,7 @@ router.get('/:id', async (req, res, next) => {
     logger.info('GET /:ID called');
     try {
         const db = await connectToDatabase();
-        const collection = db.collection("secondChanceItems");
+        const collection = db.collection(process.env.MONGO_COLLECTION);
 
         const item = await collection.findOne({ 'id': req.params.id });
 
@@ -82,7 +82,7 @@ router.put('/:id', async (req, res, next) => {
     logger.info('PUT /:id called');
     try {
         const db = await connectToDatabase();
-        const collection = db.collection("secondChanceItems");
+        const collection = db.collection(process.env.MONGO_COLLECTION);
 
         const item = await collection.findOne({ 'id': req.params.id });
 
@@ -118,7 +118,7 @@ router.delete('/:id', async (req, res, next) => {
     logger.info('DELETE /:id called');
     try {
         const db = await connectToDatabase();
-        const collection = db.collection("secondChanceItems");
+        const collection = db.collection(process.env.MONGO_COLLECTION);
 
         const { deletedCount } = await collection.deleteOne({ 'id': req.params.id });
 
