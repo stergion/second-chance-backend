@@ -19,7 +19,7 @@ router.post('/register', async (req, res) => {
 
         const email = req.body.email;
 
-        const user = await collection.findOne({email});
+        const user = await collection.findOne({ email });
 
         if (user) {
             logger.error('Email already exists');
@@ -49,6 +49,39 @@ router.post('/register', async (req, res) => {
     } catch (e) {
         logger.error(e);
         return res.status(500).send('Internal server error');
+    }
+});
+
+router.post('/login', async (req, res) => {
+    logger.info('POST /auth/login called');
+    try {
+        const db = await connectToDatabase();
+        const collection = db.collection("users");
+
+        const user = await collection.findOne({ "email": req.body.email });
+
+        if (!user) {
+            logger.error('User not found')
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        if (!bcrypt.compareSync(req.body.password, user.password)) {
+            logger.error('Wrong pasword')
+            return res.status(404).json({ error: 'Wrong pasword' });
+        }
+        
+        const payload = {
+            user: {
+                id: user._id.toString()
+            }
+        };
+        const authtoken = jwt.sign(payload, process.env.JWT_SECRET);
+
+        res.json({ authtoken, userName:user.userName, email:user.email });
+    } catch (e) {
+        logger.error(e);
+        return res.status(500).send('Internal server error');
+
     }
 });
 
