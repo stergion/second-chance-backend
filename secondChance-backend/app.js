@@ -5,6 +5,7 @@ const cors = require('cors');
 const pinoLogger = require('./logger');
 
 const connectToDatabase = require('./models/db');
+const secondChanceItemsroutes = require('./routes/secondChanceItemsRoutes')
 const {loadData} = require("./util/import-mongo/index");
 
 
@@ -22,6 +23,7 @@ connectToDatabase().then(() => {
 app.use(express.json());
 
 // Route files
+app.use('/api/secondchance/items', secondChanceItemsroutes)
 
 // authRoutes Step 2: import the authRoutes and store in a constant called authRoutes
 //{{insert code here}}
