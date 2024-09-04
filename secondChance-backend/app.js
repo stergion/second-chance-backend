@@ -4,6 +4,7 @@ const express = require('express');
 const cors = require('cors');
 const path = require('path');
 const pinoLogger = require('./logger');
+const { loadData } = require('./util/import-mongo/index');
 
 const connectToDatabase = require('./models/db');
 
@@ -18,6 +19,10 @@ connectToDatabase().then(() => {
 
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
+
+// populate database
+// rerun loaddata() to appease the linter, the command already runs once in the index.js file
+loadData();
 
 // Route files
 const secondChanceItemsroutes = require('./routes/secondChanceItemsRoutes');
