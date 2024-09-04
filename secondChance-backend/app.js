@@ -2,6 +2,7 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
+const path = require('path');
 const pinoLogger = require('./logger');
 
 const connectToDatabase = require('./models/db');
@@ -16,6 +17,7 @@ connectToDatabase().then(() => {
 }).catch((e) => console.error('Failed to connect to DB', e));
 
 app.use(express.json());
+app.use(express.static(path.join(__dirname, 'public')));
 
 // Route files
 const secondChanceItemsroutes = require('./routes/secondChanceItemsRoutes');
